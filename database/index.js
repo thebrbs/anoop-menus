@@ -48,4 +48,3 @@ const retrieve = (restaurantId, handleResponse) => {
 };
 
 module.exports.retrieve = retrieve;
-
