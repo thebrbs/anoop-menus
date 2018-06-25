@@ -1,4 +1,3 @@
 node_modules/
 public/dist/bundle.js
-restaurant.csv
-filter_categories.csv
+data
