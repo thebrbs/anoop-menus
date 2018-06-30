@@ -32,27 +32,28 @@ CREATE TABLE entrees(
   PRICE         SMALLINT      NOT NULL,
   DESCRIPTION   VARCHAR(500),
   PHOTOURL      VARCHAR(125),
+  CATEGORIES    SMALLINT      NOT NULL,
   PRIMARY KEY (ENTREES_ID)
 );
 
-CREATE TABLE filter_categories(
-  FILTER_CATEGORIES_ID  SMALLINT   NOT NULL,
-  VEGETARIAN            BOOLEAN,
-  NON_VEGETARIAN        BOOLEAN,
-  VEGAN                 BOOLEAN,
-  GLUTEN_FREE           BOOLEAN,
-  PRIMARY KEY(FILTER_CATEGORIES_ID)
-);
+-- CREATE TABLE filter_categories(
+--   FILTER_CATEGORIES_ID  SMALLINT   NOT NULL,
+--   VEGETARIAN            BOOLEAN,
+--   NON_VEGETARIAN        BOOLEAN,
+--   VEGAN                 BOOLEAN,
+--   GLUTEN_FREE           BOOLEAN,
+--   PRIMARY KEY(FILTER_CATEGORIES_ID)
+-- );
 
 CREATE TABLE categories_entrees(
   CATEGORIES_ID   INT    references categories(CATEGORIES_ID),
   ENTREES_ID      INT    references entrees(ENTREES_ID)
 );
 
-CREATE TABLE entrees_filter_categories(
-  ENTREES_ID            INT    references entrees(ENTREES_ID),
-  FILTER_CATEGORIES_ID  INT    references filter_categories(FILTER_CATEGORIES_ID)
-);
+-- CREATE TABLE entrees_filter_categories(
+--   ENTREES_ID            INT    references entrees(ENTREES_ID),
+--   FILTER_CATEGORIES_ID  INT    references filter_categories(FILTER_CATEGORIES_ID)
+-- );
 
 ALTER TABLE categories_entrees
   ADD CONSTRAINT categories_keys
