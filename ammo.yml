@@ -1,0 +1,28 @@
+config:
+  target: 'http://localhost:3005'
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      name: "Warm up the application"
+    - duration: 120
+      arrivalRate: 1
+      rampTo: 15
+      name: "jump to max load"
+    - duration: 120
+      arrivalRate: 15
+      rampTo: 17
+      name: "keep at the max load"
+    - duration: 120
+      arrivalRate: 17
+      name: "try to push the max"
+    - duration: 60
+      arrivalRate: 17
+      rampTo: 1
+      name: "calm down"
+scenarios:
+  - name: 'fetching menus'
+    flow:
+    - loop:
+      - get:
+          url: '/menus/restaurant/{{$randomNumber(1, 10000000)}}/menu'
+      count: 200

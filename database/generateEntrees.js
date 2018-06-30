@@ -10,20 +10,20 @@ const getRandomInt = function(min, max) {
 
 const generateFile = function(writer) {
   let i = 1;
-  writer.write('entrees_id,name,price,description,photourl\n')
+  writer.write('name,price,description,photourl\n')
 
   const generate = function() {
     let ok = true;
     do {
-      // if (i % 100000 === 0) {
-      //   console.log(`${i} written`);
-      // };
+      if (i % 100000 === 0) {
+        console.log(`${i} written`);
+      };
       if (i === 50000000) {
-        writer.write(`${i},${faker.lorem.word()},${getRandomInt(3, 99)}99,${hipster.getWords(30)},${faker.image.imageUrl()}`);
+        writer.write(`${faker.lorem.word()},${getRandomInt(3, 99)}99,${hipster.getWords(30)},${faker.image.imageUrl()},${getRandomInt(1, 6)}`);
         writer.end();
         console.log('all files have been written');
       } else {
-        ok = writer.write(`${i},${faker.lorem.word()},${getRandomInt(3, 99)}99,${hipster.getWords(30)},${faker.image.imageUrl()}\n`);
+        ok = writer.write(`${faker.lorem.word()},${getRandomInt(3, 99)}99,${hipster.getWords(30)},${faker.image.imageUrl()},${getRandomInt(1, 6)}\n`);
       };
       i += 1;
     } while (i <= 50000000 && ok);

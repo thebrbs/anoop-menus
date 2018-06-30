@@ -19,7 +19,6 @@ class Menu extends React.Component {
     this.subMenusList = [];
     this.getMenuObj();
     this.handleScroll();
-    console.log(filterTitle);
 
     this.handleMenuBtnClick = this.handleMenuBtnClick.bind(this);
     this.handleFilterBtnClick = this.handleFilterBtnClick.bind(this);
@@ -29,6 +28,7 @@ class Menu extends React.Component {
   getMenuObj() {
     axios.get(`/menus/restaurant/${this.props.match.params.restaurantId}/menu`)
       .then(response => {
+        console.log(response);
         this.findSubMenusList(response.data[0]);
         this.setState({
           menu: response.data[0],
@@ -111,13 +111,13 @@ class Menu extends React.Component {
           <h3 className={styles['menu-title']}>Menu</h3>
           <div className={styles.menuBtnContainer}>
             {this.subMenusList.map((subMenu, i) => {
-              return <MenuButton name={subMenu} selectedSubMenu={this.state.selectedSubMenu} key={i} 
+              return <MenuButton name={subMenu} selectedSubMenu={this.state.selectedSubMenu} key={i}
                       handleClick={this.handleMenuBtnClick} />;
             })}
             <FilterMenu filters={this.state.selectedFilters} handleClick={this.handleFilterBtnClick} />
           </div>
           <div id="menuContentContainer" className={styles.hidden}>
-            {this.state.selectedSubMenu.length > 0 ? 
+            {this.state.selectedSubMenu.length > 0 ?
             this.state.menu[this.state.selectedSubMenu].map((sectionObj, i) => {
               return <SubMenuSection sectionObj={sectionObj} filterObj={this.state.selectedFilters} key={i} />;
             }) : null}
@@ -132,6 +132,6 @@ class Menu extends React.Component {
       </div>
     );
   }
-} 
+}
 
 export default Menu;

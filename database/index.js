@@ -1,50 +1,37 @@
-const mongoose = require('mongoose');
+const { Pool } = require ('pg');
+const postgres = require('./password.js');
 
-const mongoURL = process.env.mongoURL || 'mongodb://localhost/cavatable_menus';
+const connection = `postgres://${postgres.login.username}:${postgres.login.password}@localhost:5432/jointable`;
 
-mongoose.connect(mongoURL);
+const client = new Pool(connection);
 
-const menuSchema = new mongoose.Schema({
-  rest_id: Number,
-  rest_name: String,
-  breakfast: [{
-    menu_section: String,
-    entries: [{
-      name: String,
-      desc: String,
-      price: String,
-      photoUrl: String,
-      filter_categories: {},
-    }],
-  }],
-  lunch: [{
-    menu_section: String,
-    entries: [{
-      name: String,
-      desc: String,
-      price: String,
-      photoUrl: String,
-      filter_categories: {},
-    }],
-  }],
-  dinner: [{
-    menu_section: String,
-    entries: [{
-      name: String,
-      desc: String,
-      price: String,
-      photoUrl: String,
-      filter_categories: {},
-    }],
-  }],
-});
+client.connect();
 
-const MenuModel = mongoose.model('menus', menuSchema);
-
-const retrieve = (restaurantId, handleResponse) => {
-  MenuModel.find({ rest_id: parseInt(restaurantId) })
-    .then(results => handleResponse(null, results))
-    .catch(err => handleResponse(err, null));
-};
+const retrieve = (restId, callback) => {
+  const retrieveQuery = `
+  SELECT r.name, m.menu_name, c.categories_name,
+     e.name, e.price, e.description, e.photourl, e.categories
+    FROM restaurant AS r
+    INNER JOIN restaurant_menus AS rm
+    ON rm.rest_id = r.rest_id
+    INNER JOIN menus AS m
+    ON m.menu_id = rm.menu_id
+    INNER JOIN menu_categories AS mc
+    ON m.menu_id = mc.menu_id
+    INNER JOIN categories AS c
+    ON mc.categories_id = c.categories_id
+    INNER JOIN categories_entrees AS ce
+    ON c.categories_id = ce.categories_id
+    INNER JOIN entrees AS e
+    ON ce.entrees_id = e.entrees_id
+    WHERE r.rest_id = ${restId};`
+  client.query(retrieveQuery, (err, res) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, res);
+    }
+  });
+}
 
 module.exports.retrieve = retrieve;
